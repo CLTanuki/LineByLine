@@ -30,7 +30,7 @@ input_dict = {}
 counter_dict = {}
 
 for file in type_files:
-    type_dict[file] = codecs.open(file, 'r', encoding='utf-8').readlines()
+    type_dict[file] = codecs.open(file, 'r').readlines()
     counter_dict[file] = 0
 
 for file in input_files:
@@ -39,11 +39,17 @@ for file in input_files:
 
 for i in input_dict:
     word_list = input_dict.get(i)
-    for word in i:
-        for i in type_dict:
-            type_list = type_dict.get(i)
+    for word in word_list:
+        for a in type_dict:
+            counter_dict[i] = {}
+            word_data = counter_dict[a]
+            type_list = type_dict.get(a)
+            print(type_list)
             if word in type_list:
-                counter_dict[i] += 1
+                word_data[word] = 0 if word_data[word] is None else word_data[word]
+                word_data[word] += 1
 
 for i in counter_dict:
     f = open(join(type_path, i))
+
+print(counter_dict)
