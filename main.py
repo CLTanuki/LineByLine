@@ -4,6 +4,7 @@ import codecs
 import re
 from os import listdir
 from os.path import isfile, join, split
+from dicttoxml import dicttoxml
 
 if hasattr(sys, 'frozen'):
     basis = sys.executable
@@ -12,44 +13,40 @@ else:
 
 base_folder = split(basis)[0]
 
-print(base_folder)
-
 type_path = join(base_folder, "types")
-print(type_path)
 input_path = join(base_folder, "input")
-print(input_path)
 result_path = join(base_folder, "result")
 
 type_files = [f for f in listdir(type_path) if isfile(join(type_path, f))]
-print(type_files)
 input_files = [f for f in listdir(input_path) if isfile(join(input_path, f))]
-print(input_files)
 
 type_dict = {}
 input_dict = {}
 counter_dict = {}
 
 for file in type_files:
-    type_dict[file] = codecs.open(file, 'r').readlines()
-    counter_dict[file] = 0
+    type_dict[file] = [x.rstrip() for x in codecs.open(join(type_path, file), 'r').readlines()]
+print(type_dict)
 
 for file in input_files:
-    data = codecs.open(file, 'r', encoding='utf-8').read()
+    data = codecs.open(join(input_path, file), 'r', encoding='cp1251').read()
     input_dict[file] = re.sub("[^\w]", " ",  data).split()
+    counter_dict[file] = 0
 
 for i in input_dict:
     word_list = input_dict.get(i)
-    for word in word_list:
-        for a in type_dict:
-            counter_dict[i] = {}
-            word_data = counter_dict[a]
-            type_list = type_dict.get(a)
-            print(type_list)
+    cat_data = {}
+
+    for k, v in type_dict.items():
+        word_data = {}
+        type_list = v
+        print(type_list)
+        for word in word_list:
             if word in type_list:
-                word_data[word] = 0 if word_data[word] is None else word_data[word]
-                word_data[word] += 1
+                word_data[word] = word_data.get(word, 0) + 1
+        cat_data[k] = word_data
+    counter_dict[i] = cat_data
 
-for i in counter_dict:
-    f = open(join(type_path, i))
-
-print(counter_dict)
+result = open('result.xml', 'w')
+result.write(dicttoxml(counter_dict))
+result.close()
