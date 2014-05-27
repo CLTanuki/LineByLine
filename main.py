@@ -26,7 +26,6 @@ counter_dict = {}
 
 for file in type_files:
     type_dict[file] = [x.rstrip() for x in codecs.open(join(type_path, file), 'r').readlines()]
-print(type_dict)
 
 for file in input_files:
     data = codecs.open(join(input_path, file), 'r', encoding='cp1251').read()
@@ -36,17 +35,18 @@ for file in input_files:
 for i in input_dict:
     word_list = input_dict.get(i)
     cat_data = {}
-
     for k, v in type_dict.items():
         word_data = {}
         type_list = v
-        print(type_list)
         for word in word_list:
             if word in type_list:
                 word_data[word] = word_data.get(word, 0) + 1
         cat_data[k] = word_data
     counter_dict[i] = cat_data
 
-result = open('result.xml', 'w')
-result.write(dicttoxml(counter_dict))
-result.close()
+print(counter_dict)
+
+for k, v in counter_dict.items():
+    result = open(join(result_path, k + '.xml'), 'w')
+    result.write(dicttoxml(v))
+    result.close()
