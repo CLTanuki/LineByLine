@@ -47,14 +47,18 @@ for i in input_dict:
 workbook = xlsxwriter.Workbook('result.xlsx')
 
 for k, v in counter_dict.items():
-    worksheet = workbook.add_worksheet()
+    worksheet = workbook.add_worksheet(k)
     col = 0
     for i, t in v.items():
+        s_col = col + 1
         line = 0
-        worksheet.write(col, line, i)
-        for a, z in v.items():
+        worksheet.write(line, col, i)
+        print(t)
+        for a, z in t.items():
             line += 1
-            worksheet.write(col, line, a)
-            worksheet.write(col +1, line, z)
+            print(col, s_col, line, a, z)
+            worksheet.write(line, col, a)
+            worksheet.write(line, s_col, z)
+        col += 2
 
 workbook.close()
