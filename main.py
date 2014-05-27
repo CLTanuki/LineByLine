@@ -25,7 +25,7 @@ input_dict = {}
 counter_dict = {}
 
 for file in type_files:
-    type_dict[file] = [x.rstrip() for x in codecs.open(join(type_path, file), 'r').readlines()]
+    type_dict[file] = [x.rstrip() for x in codecs.open(join(type_path, file), 'r', encoding='cp1251').readlines()]
 
 for file in input_files:
     data = codecs.open(join(input_path, file), 'r', encoding='cp1251').read()
@@ -53,12 +53,11 @@ for k, v in counter_dict.items():
         s_col = col + 1
         line = 0
         worksheet.write(line, col, i)
-        print(t)
         for a, z in t.items():
             line += 1
             print(col, s_col, line, a, z)
             worksheet.write(line, col, a)
             worksheet.write(line, s_col, z)
         col += 2
-
+print(counter_dict)
 workbook.close()
