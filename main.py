@@ -5,6 +5,7 @@ import re
 from os import listdir
 from os.path import isfile, join, split
 from dicttoxml import dicttoxml
+import xlsxwriter
 
 if hasattr(sys, 'frozen'):
     basis = sys.executable
@@ -15,7 +16,6 @@ base_folder = split(basis)[0]
 
 type_path = join(base_folder, "types")
 input_path = join(base_folder, "input")
-result_path = join(base_folder, "result")
 
 type_files = [f for f in listdir(type_path) if isfile(join(type_path, f))]
 input_files = [f for f in listdir(input_path) if isfile(join(input_path, f))]
@@ -44,9 +44,17 @@ for i in input_dict:
         cat_data[k] = word_data
     counter_dict[i] = cat_data
 
-print(counter_dict)
+workbook = xlsxwriter.Workbook('result.xlsx')
 
 for k, v in counter_dict.items():
-    result = open(join(result_path, k + '.xml'), 'w')
-    result.write(dicttoxml(v))
-    result.close()
+    worksheet = workbook.add_worksheet()
+    col = 0
+    for i, t in v.items():
+        line = 0
+        worksheet.write(col, line, i)
+        for a, z in v.items():
+            line += 1
+            worksheet.write(col, line, a)
+            worksheet.write(col +1, line, z)
+
+workbook.close()
