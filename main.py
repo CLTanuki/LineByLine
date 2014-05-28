@@ -4,7 +4,6 @@ import codecs
 import re
 from os import listdir
 from os.path import isfile, join, split
-from dicttoxml import dicttoxml
 import xlsxwriter
 
 if hasattr(sys, 'frozen'):
@@ -25,11 +24,11 @@ input_dict = {}
 counter_dict = {}
 
 for file in type_files:
-    type_dict[file] = [x.rstrip() for x in codecs.open(join(type_path, file), 'r', encoding='cp1251').readlines()]
+    type_dict[file] = [x.rstrip().lower() for x in codecs.open(join(type_path, file), 'r', encoding='cp1251').readlines()]
 
 for file in input_files:
     data = codecs.open(join(input_path, file), 'r', encoding='cp1251').read()
-    input_dict[file] = re.sub("[^\w]", " ",  data).split()
+    input_dict[file] = [i.lower() for i in re.sub("[^\w]", " ",  data).split()]
     counter_dict[file] = 0
 
 for i in input_dict:
@@ -59,5 +58,5 @@ for k, v in counter_dict.items():
             worksheet.write(line, col, a)
             worksheet.write(line, s_col, z)
         col += 2
-print(counter_dict)
+
 workbook.close()
